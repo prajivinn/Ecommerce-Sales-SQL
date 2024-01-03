@@ -34,8 +34,8 @@ Certainly, here's a summary of each analysis conducted in your project, along wi
 **Query Description**: This analysis calculates the total quantity and subtotal for each product in the OrderDetails table.
 
 **Key Findings**:
-- Laptop (ProductID 1) has the highest total quantity sold (13) and subtotal ($12,000).
-- Chair (ProductID 3) has the lowest total quantity sold (3) and subtotal ($450).
+- Laptop (ProductID 1) has the highest total quantity sold (9) and subtotal ($9,000).
+- Chair (ProductID 3) has the lowest total quantity sold (6) and subtotal ($900).
 
 **Insights**:
 - Understanding product performance is essential for inventory management and marketing decisions.
@@ -45,7 +45,7 @@ Certainly, here's a summary of each analysis conducted in your project, along wi
 **Query Description**: This query categorizes orders as high, medium, or low based on predefined total amount ranges.
 
 **Key Findings**:
-- Several orders fall into the "High" and "Medium" categories, indicating substantial sales.
+- Several orders fall into the "Low" and "Medium" categories, indicating substantial sales.
 
 **Insights**:
 - Categorizing orders can help identify trends and segment customers for targeted promotions.
@@ -65,7 +65,7 @@ Certainly, here's a summary of each analysis conducted in your project, along wi
 **Query Description**: This query lists products that have been ordered more than the average quantity ordered across all products.
 
 **Key Findings**:
-- Products such as Laptop (ProductID 1) and Chair (ProductID 3) have above-average sales quantities.
+- Products such as Laptop (ProductID 1) and Tablet (ProductID 4) have above-average sales quantities.
 
 **Insights**:
 - Identifying top-selling products can guide inventory and marketing efforts.
