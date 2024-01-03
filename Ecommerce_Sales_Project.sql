@@ -119,11 +119,11 @@ VALUES
 
 -- -------------------- QUESTIONS --------------------
 -- Q.1 List the total sales amount for each customer, including their first and last names.
-SELECT c.FirstName, c.LastName, SUM(o.TotalAmount) AS TotalSales
-FROM customers c
-INNER JOIN orders o
-	ON c.CustomerID = o.CustomerID
-GROUP BY c.FirstName, c.LastName;
+select c.FirstName, c.LastName, SUM(O.TotalAmount) as Total_Sales
+from Orders O 
+INNER JOIN customers c
+        ON O.CustomerID=c.CustomerID
+GROUP BY O.CustomerID;
 
 -- Q.2 Find the orders where the total amount is higher than the average total amount of all orders.
 SELECT OrderID, OrderDate, TotalAmount
@@ -132,7 +132,7 @@ WHERE TotalAmount > (SELECT avg(TotalAmount) FROM orders)
 ;
 
 -- Q.3 Calculate the total quantity and subtotal for each product in the OrderDetails table.
-SELECT o.ProductID, p.ProductName, sum(o.Quantity), sum(o.Subtotal)
+SELECT o.ProductID, p.ProductName, sum(o.Quantity) as Total_Quantity, sum(o.Subtotal) as SubTotal
 FROM orderdetails o
 INNER JOIN products p 
 	ON o.ProductID = p.ProductID
@@ -149,42 +149,39 @@ END AS Category
 FROM orders;
 
 -- Q.5 Rank the employees based on the total number of orders they have processed.
-SELECT EmployeeID, COUNT(OrderID),
-  DENSE_RANK() OVER (ORDER BY COUNT(OrderID) DESC) AS OrderDenseRank,
+SELECT EmployeeID, COUNT(OrderID) as Total_Orders,
   RANK() OVER (ORDER BY COUNT(OrderID) DESC) AS OrderRank
 FROM orders
 GROUP BY EmployeeID;
 
 -- Q.6 List the products that have been ordered more than the average quantity ordered across all products.
-SELECT ProductName
-FROM products
-WHERE ProductID IN 
-(
-SELECT ProductID
-FROM orderdetails
+WITH avgquant AS (
+SELECT ProductID, sum(Quantity) AS total_quantity
+FROM OrderDetails
 GROUP BY ProductID
-HAVING SUM(Quantity) > (SELECT avg(Quantity) from orderdetails)
 )
-;
+SELECT o.ProductID, p.ProductName, sum(o.Quantity) AS Total_Quantity
+FROM OrderDetails o 
+INNER JOIN Products p
+        ON o.ProductID=p.ProductID
+GROUP BY o.ProductID
+HAVING total_quantity > ( SELECT avg(total_quantity) FROM avgquant);
 
 -- Q.7 Retrieve the customer details along with the employee first and last name who handled their order.
-SELECT  c.FirstName AS CustomerFirstName, c.LastName AS CustomerLastName, 
-e.FirstName AS EmployeeFirstName, e.LastName AS EmployeeLastName
-FROM customers c
+SELECT c.FirstName AS CustomerFirstName, c.LastName AS CustomerLastName, e.FirstName AS EmployeeFirstName, e.LastName AS EmployeeLastName
+FROM customers c 
 INNER JOIN orders o
-	ON c.CustomerID = O.CustomerID
+        ON c.CustomerID = o.CustomerID
 INNER JOIN employees e
-	ON o.EmployeeID = e.EmployeeID
-GROUP BY c.FirstName, c.LastName , 
-e.FirstName , e.LastName 
-;
+        ON o.EmployeeID = e.EmployeeID;
 
-select o.OrderID,c.*,o.EmployeeID,e.FirstName,e.LastName						
-from Customers c, Orders o, Employees e						
-where o.CustomerID  = c.CustomerID and o.EmployeeID = e.EmployeeID;
+-- Another way of solving Q.7
+SELECT o.OrderID,c.*,o.EmployeeID,e.FirstName,e.LastName						
+FROM Customers c, Orders o, Employees e						
+WHERE o.CustomerID  = c.CustomerID AND o.EmployeeID = e.EmployeeID;
 
 -- Q.8 List the total quantity sold and the average price per product category.
-SELECT p.Category, SUM(o.Quantity), AVG(p.Price)
+SELECT p.Category, SUM(o.Quantity) as Total_Quantity, AVG(p.Price) as Average_Price_Per_Category
 FROM products p
 INNER JOIN orderdetails o
 	ON p.ProductID = o.ProductID
@@ -194,18 +191,14 @@ GROUP BY p.Category;
 -- Avg no. of orders customers placed
 -- Customers who have placed >= Avg. 
 
-SELECT c.FirstName, c.LastName
-FROM customers c
-WHERE CustomerID IN (
-SELECT CustomerID
+WITH Customer_Orders as (
+SELECT CustomerID, COUNT(CustomerID) AS orders
 FROM orders
-GROUP BY CustomerID
-HAVING Count(OrderId) >
-(
-SELECT AVG(OrdersCust)
-FROM (
-SELECT CustomerID, Count(OrderId) AS OrdersCust
-FROM orders
-GROUP BY CustomerID) a
-))
-;
+GROUP BY CustomerID)
+
+SELECT o.CustomerID,c.FirstName, c.LastName, COUNT(o.CustomerID) AS orders
+FROM orders o 
+INNER JOIN customers c
+        ON o.CustomerID = c.CustomerID
+GROUP BY o.CustomerID
+HAVING orders > ( SELECT avg(orders) FROM Customer_Orders);
