@@ -13,7 +13,7 @@ Certainly, here's a summary of each analysis conducted in your project, along wi
 **Query Description**: This query calculates the total sales amount for each customer and retrieves their first and last names.
 
 **Key Findings**:
-- John Doe has the highest total sales amount ($4300).
+- John Doe has the highest total sales amount ($6030).
 - Emily Williams and Jane Smith also have significant sales amounts.
 
 **Insights**:
