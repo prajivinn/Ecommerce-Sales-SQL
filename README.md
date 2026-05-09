@@ -1,5 +1,7 @@
 # E-commerce Sales Analysis
 
+Project_link:https://prajivinn.github.io/2023/12/10/Ecommerce-Sales-Analysis.html
+
 ## Project Background
 This project involves the creation of a sales analysis database, including customer information, product details, employee data, orders, and order details. The aim is to gain insights into sales patterns and customer behavior.
 
